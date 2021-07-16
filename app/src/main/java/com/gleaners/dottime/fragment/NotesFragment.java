@@ -1,5 +1,7 @@
 package com.gleaners.dottime.fragment;
 
+import android.os.Bundle;
+
 import com.gleaners.dottime.R;
 import com.gleaners.dottime.base.BaseFragment;
 
@@ -10,17 +12,15 @@ import com.gleaners.dottime.base.BaseFragment;
  */
 public class NotesFragment extends BaseFragment {
 
-    public static BaseFragment getInstance() {
-        return new NotesFragment();
-    }
-
     @Override
-    protected int getContentViewId() {
+    protected int onCreateLayout() {
         return R.layout.fragment_notes;
     }
 
     @Override
-    protected void initView() {
+    protected void onCreateViewInit(Bundle savedInstanceState) {
 
     }
+
+
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_page"
+    app:startDestination="@id/menu_images">
+
+    <fragment
+        android:id="@+id/menu_images"
+        android:name="com.gleaners.dottime.fragment.ImagesFragment"
+        android:label="images"
+        tools:layout="@layout/fragment_images">
+        <action
+            android:id="@+id/action_images_to_action_albums"
+            app:destination="@id/menu_albums"/>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/menu_albums"
+        android:name="com.gleaners.dottime.fragment.AlbumsFragment"
+        android:label="albums"
+        tools:layout="@layout/fragment_albums"/>
+
+</navigation>

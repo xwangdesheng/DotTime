@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import butterknife.ButterKnife;
+
 /**
  * @author ...
  * @date 2021-07-14 16:45
@@ -30,11 +32,13 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        contentView = inflater.inflate(getContentViewId(), container, false);
+        contentView = inflater.inflate(onCreateLayout(), container, false);
+        ButterKnife.bind(this, contentView);
+        onCreateViewInit(savedInstanceState);
         return contentView;
     }
 
-    protected abstract int getContentViewId();
+    protected abstract int onCreateLayout();
 
-    protected abstract void initView();
+    protected abstract void onCreateViewInit(Bundle savedInstanceState);
 }
