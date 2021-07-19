@@ -2,9 +2,17 @@ package com.gleaners.dottime.fragment;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.telecom.Call;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.gleaners.dottime.R;
+import com.gleaners.dottime.adapter.ImagesAdapter;
 import com.gleaners.dottime.base.BaseFragment;
 import com.gleaners.dottime.beans.Folder;
 import com.gleaners.dottime.beans.Image;
@@ -17,12 +25,33 @@ import com.permissionx.guolindev.request.ExplainScope;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * @author ...
  * @date 2021-07-14 16:19
  * description：
  */
 public class ImagesFragment extends BaseFragment {
+    @BindView(R.id.img_recyclerView)
+    RecyclerView recyclerView;
+
+    private final static int WHAT_NOTIFY_DATA = 0;
+
+    private List<Image> list;
+    private ImagesAdapter adapter;
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case WHAT_NOTIFY_DATA:
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+            return false;
+        }
+    });
 
     @Override
     protected int onCreateLayout() {
@@ -31,6 +60,12 @@ public class ImagesFragment extends BaseFragment {
 
     @Override
     protected void onCreateViewInit(Bundle savedInstanceState) {
+        list = new ArrayList<>();
+        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 4));
+        recyclerView.getRecycledViewPool().setMaxRecycledViews(0, 0);
+        adapter = new ImagesAdapter(list, mActivity);
+        recyclerView.setAdapter(adapter);
+
         PermissionX.init(this)
                 .permissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -54,12 +89,13 @@ public class ImagesFragment extends BaseFragment {
     }
 
     private void loadImages() {
-        Log.d(TAG, "loadImages: ");
         ImageUtils.loadImageForSDCard(mActivity, new ImageUtils.CallBack() {
             @Override
             public void onSuccess(ArrayList<Folder> folders, ArrayList<Image> images) {
                 Log.d(TAG, "folders: " + folders);
                 Log.d(TAG, "images: " + images);
+                list.addAll(images);
+                handler.sendEmptyMessage(WHAT_NOTIFY_DATA);
             }
         });
     }

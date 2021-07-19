@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 
 import com.gleaners.dottime.beans.Folder;
 import com.gleaners.dottime.beans.Image;
+import android.provider.MediaStore.Images.Media;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,10 +22,11 @@ import java.util.List;
  */
 public class ImageUtils {
     private static String TAG = ImageUtils.class.getSimpleName();
+
     /**
      * loading image from SDCard.
      */
-    public static void loadImageForSDCard(final Context context, final CallBack callBack){
+    public static void loadImageForSDCard(final Context context, final CallBack callBack) {
 
         // Because of scanning image would take long time, do it at child thread.
         new Thread(new Runnable() {
@@ -33,26 +35,23 @@ public class ImageUtils {
                 Uri imgUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 ContentResolver contentResolver = context.getContentResolver();
                 Cursor cursor = contentResolver.query(imgUri, new String[]{
-                        MediaStore.Images.Media.DATA,
-                        MediaStore.Images.Media.DISPLAY_NAME,
-                        MediaStore.Images.Media.DATE_ADDED,
-                        MediaStore.Images.Media._ID
-                }, null, null, MediaStore.Images.Media.DATE_ADDED);
+                        Media.DATA,
+                        Media.DISPLAY_NAME,
+                        Media.DATE_ADDED,
+                        Media._ID,
+                }, null, null, Media.DATE_ADDED);
 
                 ArrayList<Image> images = new ArrayList<>();
 
                 //Read image of scanned.
                 if (cursor != null) {
-                    while (cursor.moveToNext()){
-                        //obtain path of image.获取图片路径
-                        String path = cursor.getString
-                                (cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                        //obtain name of image.获取图片名字
-                        String name = cursor.getString
-                                (cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-                        //obtain time of image.获取图片时间
-                        long time = cursor.getLong
-                                (cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
+                    while (cursor.moveToNext()) {
+                        //获取图片路径
+                        String path = cursor.getString(cursor.getColumnIndex(Media.DATA));
+                        //获取图片名字
+                        String name = cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME));
+                        //获取图片时间
+                        long time = cursor.getLong(cursor.getColumnIndex(Media.DATE_ADDED));
                         images.add(new Image(path, time, name));
                     }
                 }
@@ -69,15 +68,14 @@ public class ImageUtils {
     /**
      * dismantling image by folder, first folder is used to keeping all images.
      */
-    private static ArrayList<Folder> splitFolder(ArrayList<Image> images){
+    private static ArrayList<Folder> splitFolder(ArrayList<Image> images) {
         ArrayList<Folder> folders = new ArrayList<>();
-        folders.add(new Folder("全部图片", images));
-        if (images != null && !images.isEmpty()){
+        if (images != null && !images.isEmpty()) {
             int size = images.size();
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 String path = images.get(i).getPath();
                 String name = getFolderName(path);
-                if (!name.equals("")){
+                if (!name.equals("")) {
                     Folder folder = getFolder(name, folders);
                     folder.addImage(images.get(i));
                 }
@@ -88,21 +86,21 @@ public class ImageUtils {
 
     //根据图片路径，获取图片文件夹名称
     private static String getFolderName(String path) {
-        if (path != null){
+        if (path != null) {
             String[] strings = path.split(File.separator);
-            if (strings.length >= 2){
+            if (strings.length >= 2) {
                 return strings[strings.length - 2];
             }
         }
         return "";
     }
 
-    private static Folder getFolder(String name, List<Folder> folders){
-        if (folders != null && !folders.isEmpty()){
+    private static Folder getFolder(String name, List<Folder> folders) {
+        if (folders != null && !folders.isEmpty()) {
             int size = folders.size();
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 Folder folder = folders.get(i);
-                if (name.equals(folder.getName())){
+                if (name.equals(folder.getName())) {
                     return folder;
                 }
             }

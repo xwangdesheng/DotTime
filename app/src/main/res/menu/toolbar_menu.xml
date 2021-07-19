@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/take_photo"
+        android:icon="@drawable/baseline_camera_alt_white_24dp"
+        android:title="相机"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:icon="@drawable/baseline_more_vert_white_24dp"
+        android:title="更多"
+        app:showAsAction="ifRoom"
+        android:id="@+id/more"/>
+</menu>
