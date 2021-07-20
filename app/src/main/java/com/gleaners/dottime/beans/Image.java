@@ -9,11 +9,13 @@ package com.gleaners.dottime.beans;
 
 import com.alibaba.fastjson.JSON;
 
+import java.io.Serializable;
+
 /**
  * Created by wangdesheng on 2017/10/27 0027.
  */
 
-public class Image {
+public class Image implements Serializable {
 
     private String path;
     private long time;

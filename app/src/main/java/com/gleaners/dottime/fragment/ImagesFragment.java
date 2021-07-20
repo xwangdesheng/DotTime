@@ -1,17 +1,24 @@
 package com.gleaners.dottime.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.telecom.Call;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gleaners.dottime.R;
+import com.gleaners.dottime.activity.MainActivity;
+import com.gleaners.dottime.activity.SeeImgActivity;
 import com.gleaners.dottime.adapter.ImagesAdapter;
 import com.gleaners.dottime.base.BaseFragment;
 import com.gleaners.dottime.beans.Folder;
@@ -41,7 +48,7 @@ public class ImagesFragment extends BaseFragment {
     private List<Image> list;
     private ImagesAdapter adapter;
 
-    private Handler handler = new Handler(new Handler.Callback() {
+    private final Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             switch (msg.what) {
@@ -62,9 +69,25 @@ public class ImagesFragment extends BaseFragment {
     protected void onCreateViewInit(Bundle savedInstanceState) {
         list = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 4));
-        recyclerView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         adapter = new ImagesAdapter(list, mActivity);
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new ImagesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Image image, ImageView imageView) {
+                Intent intent = new Intent(mActivity, SeeImgActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("imageObj", image);
+                intent.putExtras(bundle);
+
+                Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        mActivity,
+                        imageView,
+                        "itemImage"
+                ).toBundle();
+                ActivityCompat.startActivity(mActivity, intent, options);
+            }
+        });
 
         PermissionX.init(this)
                 .permissions(
