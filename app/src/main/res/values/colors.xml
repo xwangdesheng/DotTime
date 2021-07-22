@@ -21,4 +21,5 @@
     <color name="cyan_800">#00838F</color>
     <color name="cyan_900">#006064</color>
     <color name="orange_800">#EF6C00</color>
+    <color name="orange_80">#65000000</color>
 </resources>

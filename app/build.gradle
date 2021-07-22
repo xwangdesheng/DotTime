@@ -44,6 +44,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.permissionx.guolindev:permission-support:1.4.0'
     implementation 'com.alibaba:fastjson:1.2.73'
-    implementation 'com.blankj:utilcode:1.20.0'
+    implementation 'com.blankj:utilcodex:1.30.6'
 
 }

@@ -5,19 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.telecom.Call;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gleaners.dottime.R;
-import com.gleaners.dottime.activity.MainActivity;
 import com.gleaners.dottime.activity.SeeImgActivity;
 import com.gleaners.dottime.adapter.ImagesAdapter;
 import com.gleaners.dottime.base.BaseFragment;
@@ -74,16 +72,17 @@ public class ImagesFragment extends BaseFragment {
 
         adapter.setOnItemClickListener(new ImagesAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Image image, ImageView imageView) {
+            public void onItemClick(Image image, int position, ImageView imageView) {
                 Intent intent = new Intent(mActivity, SeeImgActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("imageObj", image);
+                bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) list);
+                bundle.putInt("position", position);
                 intent.putExtras(bundle);
 
                 Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         mActivity,
                         imageView,
-                        "itemImage"
+                        "viewPager"
                 ).toBundle();
                 ActivityCompat.startActivity(mActivity, intent, options);
             }
